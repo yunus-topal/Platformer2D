@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,6 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterController2D : MonoBehaviour
 {
+	[SerializeField] private bool animate = false;
 	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
 	[SerializeField] private float m_jumpCooldown = 0.5f;
 	[Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;			// Amount of maxSpeed applied to crouching movement. 1 = 100%
@@ -19,6 +21,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool m_Grounded;            // Whether or not the player is grounded.
 	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
 	private Rigidbody2D m_Rigidbody2D;
+	private Animator _animator;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
 	private float _lastJumpTime = float.MinValue;
@@ -37,12 +40,15 @@ public class CharacterController2D : MonoBehaviour
 	private void Awake()
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
+		_animator = GetComponent<Animator>();
 
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
 
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
+		
+		OnLandEvent.AddListener(JumpTimer);
 	}
 
 	private void FixedUpdate()
@@ -63,6 +69,8 @@ public class CharacterController2D : MonoBehaviour
 			}
 		}
 	}
+
+	
 
 
 	public void Move(float move, bool crouch, bool jump)
@@ -132,7 +140,12 @@ public class CharacterController2D : MonoBehaviour
 			// Add a vertical force to the player.
 			m_Grounded = false;
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+			_animator.SetTrigger("jump_trig");
 		}
+		
+		_animator.SetFloat("move_speed", Math.Abs(m_Rigidbody2D.velocity.x));
+		_animator.SetFloat("jump_speed", m_Rigidbody2D.velocity.y);
+		_animator.SetBool("grounded", m_Grounded);
 	}
 
 
@@ -145,5 +158,9 @@ public class CharacterController2D : MonoBehaviour
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1;
 		transform.localScale = theScale;
+	}
+
+	private void JumpTimer() {
+		_lastJumpTime = Time.time;
 	}
 }

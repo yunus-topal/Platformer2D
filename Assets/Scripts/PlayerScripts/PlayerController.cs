@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviour {
 
-        private Animator _animator;
         private CharacterController2D _cc;
+        private Animator _animator;
 
         public float speed = 10f;
 
@@ -18,7 +19,6 @@ namespace PlayerScripts {
         void FixedUpdate() {
             // horizontal movement
             float move = Input.GetAxis("Horizontal");
-            _animator.SetFloat("move_speed", Mathf.Abs(move));
 
             // read jump axes from input manager
             bool jump = Input.GetButton("Jump");
@@ -27,6 +27,13 @@ namespace PlayerScripts {
             bool crouch = Input.GetButton("Crouch");
 
             _cc.Move(move * speed, crouch, jump);
+
+            
         }
+
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.Mouse0)) {
+                _animator.SetTrigger("attack_trig");
+            }        }
     }
 }
