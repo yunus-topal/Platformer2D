@@ -4,6 +4,9 @@ using UnityEngine;
 namespace PlayerScripts {
     public class PlayerController : MonoBehaviour {
 
+        [SerializeField] private float attackCooldown = 1.0f;
+        private float _lastAttack = float.MinValue;
+        
         private CharacterController2D _cc;
         private Animator _animator;
 
@@ -32,8 +35,10 @@ namespace PlayerScripts {
         }
 
         private void Update() {
-            if (Input.GetKeyDown(KeyCode.Mouse0)) {
+            if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time - _lastAttack > attackCooldown) {
                 _animator.SetTrigger("attack_trig");
-            }        }
+                _lastAttack = Time.time;
+            }        
+        }
     }
 }
