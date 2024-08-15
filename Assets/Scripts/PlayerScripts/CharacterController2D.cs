@@ -72,7 +72,7 @@ namespace PlayerScripts {
 
 	
 
-
+		// TODO: remove crouch section
 		public void Move(float move, bool crouch, bool jump)
 		{
 			// If crouching, check to see if the character can stand up
@@ -140,12 +140,12 @@ namespace PlayerScripts {
 				// Add a vertical force to the player.
 				m_Grounded = false;
 				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-				_animator.SetTrigger("jump_trig");
 			}
 		
 			_animator.SetFloat("move_speed", Math.Abs(m_Rigidbody2D.velocity.x));
 			_animator.SetFloat("jump_speed", m_Rigidbody2D.velocity.y);
 			_animator.SetBool("grounded", m_Grounded);
+			Debug.Log( m_Rigidbody2D.velocity.y);
 		}
 
 
