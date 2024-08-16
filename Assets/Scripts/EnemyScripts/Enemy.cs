@@ -1,19 +1,18 @@
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace EnemyScripts {
     [CreateAssetMenu(fileName = "enemy", menuName = "Enemy")]
     public class Enemy : ScriptableObject {
         [SerializeField] private new string name;
         [SerializeField] private float hp;
-        [SerializeField] private float damage;
-        [SerializeField] private float attackCooldown;
+        [SerializeField] private float collisionDamage;
 
         public string Name => name;
 
         public float Hp => hp;
 
-        public float Damage => damage;
-
-        public float AttackCooldown => attackCooldown;
+        public float CollisionDamage => collisionDamage;
     }
 }

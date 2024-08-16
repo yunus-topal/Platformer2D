@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 
 namespace EnemyScripts.EnemyBehaviors {
-    [RequireComponent(typeof(EnemyController))]
     public class PatrollingBehavior : MonoBehaviour,IEnemyBehavior
     {
         [SerializeField] private Transform[] _patrolPoints;

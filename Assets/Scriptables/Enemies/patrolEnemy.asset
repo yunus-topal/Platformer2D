@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 836c3754ed138f747a39a49462f74ffb, type: 3}
-  m_Name: rangedEnemy
+  m_Name: patrolEnemy
   m_EditorClassIdentifier: 
-  name: 
-  hp: 0
-  damage: 0
-  attackCooldown: 0
+  name: 0
+  hp: 50
+  collisionDamage: 5
