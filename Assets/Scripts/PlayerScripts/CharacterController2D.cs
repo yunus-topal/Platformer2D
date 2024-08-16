@@ -145,7 +145,6 @@ namespace PlayerScripts {
 			_animator.SetFloat("move_speed", Math.Abs(m_Rigidbody2D.velocity.x));
 			_animator.SetFloat("jump_speed", m_Rigidbody2D.velocity.y);
 			_animator.SetBool("grounded", m_Grounded);
-			Debug.Log( m_Rigidbody2D.velocity.y);
 		}
 
 

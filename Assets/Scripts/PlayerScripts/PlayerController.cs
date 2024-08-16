@@ -94,6 +94,7 @@ namespace PlayerScripts {
             }
             _animator.SetTrigger(HitTrig);
             
+            // todo: find a better way for this.
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
             // _collider2D.excludeLayers = enemyLayers;
         }
