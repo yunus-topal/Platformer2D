@@ -1,29 +1,31 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace EnemyScripts.EnemyAttacks {
-    [RequireComponent(typeof(EnemyController))]
-    public class ArtilleryAttack : MonoBehaviour, IEnemyAttack {
+    public class ArtilleryAttack : MonoBehaviour {
         [SerializeField] private GameObject artilleryShell;
         [SerializeField] private Transform attackPoint;
         [SerializeField] private float shellForce = 10f;
         [SerializeField] private float attackCooldown = 1f;
         
-        private EnemyController _enemyController;
-
-        private void Awake() {
-            _enemyController = GetComponent<EnemyController>();
-        }
-
-        public void StartAttack() {
+        private GameObject _player;
+        
+        private void Start() {
             StartCoroutine(StartArtillery());
         }
 
         private IEnumerator StartArtillery() {
+            _player = GameObject.FindGameObjectWithTag("Player");
+            if (_player == null) yield break;
+            
             while (true) {
+                var target = _player.transform.position;
+                while ((target - transform.position).magnitude > 25f) {
+                    yield return new WaitForSeconds(0.5f);
+                }
+                
                 var bullet = Instantiate(artilleryShell, attackPoint.position, Quaternion.identity);
                 // random force on either direction.
                 // remove collisions with everything except player.

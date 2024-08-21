@@ -1,13 +1,18 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace EnemyScripts.EnemyBehaviors {
-    public class PatrollingBehavior : MonoBehaviour,IEnemyBehavior
+    public class PatrollingBehavior : MonoBehaviour
     {
         [SerializeField] private Transform[] patrolPoints;
         [SerializeField] private float speed = 1f;
-        
+
+
+        private void Start() {
+            StartCoroutine(StartMovement());
+        }
+
         public IEnumerator StartMovement() {
             int targetIndex = 0;
             while (true) {
