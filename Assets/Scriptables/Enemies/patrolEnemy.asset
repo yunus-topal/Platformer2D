@@ -15,4 +15,4 @@ MonoBehaviour:
   name: 0
   hp: 50
   collisionDamage: 5
-  knockbackForce: {x: 3, y: 0}
+  knockback: 0.5

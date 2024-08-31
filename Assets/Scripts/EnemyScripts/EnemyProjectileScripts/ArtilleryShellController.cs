@@ -14,8 +14,7 @@ namespace EnemyScripts.EnemyProjectileScripts {
 
         private void OnCollisionEnter2D(Collision2D other) {
             if (other.gameObject.CompareTag("Player")) {
-                Debug.Log("hit player");
-                other.gameObject.GetComponent<PlayerController>().TakeDamage(damage);
+                other.gameObject.GetComponent<HeroKnight>().TakeDamage(damage, transform.position);
                 Destroy(gameObject);
             }
         }

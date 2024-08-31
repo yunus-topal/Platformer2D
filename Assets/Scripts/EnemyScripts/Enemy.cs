@@ -8,7 +8,7 @@ namespace EnemyScripts {
         [SerializeField] private new string name;
         [SerializeField] private float hp;
         [SerializeField] private float collisionDamage;
-        [SerializeField] private Vector2 knockbackForce;
+        [SerializeField] private float knockback;
 
         public string Name => name;
 
@@ -16,6 +16,6 @@ namespace EnemyScripts {
 
         public float CollisionDamage => collisionDamage;
         
-        public Vector2 KnockbackForce => knockbackForce;
+        public float Knockback => knockback;
     }
 }

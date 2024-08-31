@@ -25,12 +25,16 @@ namespace EnemyScripts {
             }
             else {
                 _animator.SetTrigger(HitTrig);
+                var target = transform.position;
                 // apply knockback depending on the position of the hit. Just check x direction
                 if (position.x > transform.position.x) {
-                    GetComponent<Rigidbody2D>().AddForce(-enemyInfo.KnockbackForce, ForceMode2D.Impulse);
+                    target.x -= enemyInfo.Knockback;
+
+                    transform.position = Vector3.MoveTowards(transform.position, target, enemyInfo.Knockback);
                 }
                 else {
-                    GetComponent<Rigidbody2D>().AddForce(enemyInfo.KnockbackForce, ForceMode2D.Impulse);
+                    target.x += enemyInfo.Knockback;
+                    transform.position = Vector3.MoveTowards(transform.position, target, enemyInfo.Knockback);
                 }
             }
         }
