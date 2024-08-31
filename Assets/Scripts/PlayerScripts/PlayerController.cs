@@ -70,20 +70,18 @@ namespace PlayerScripts {
         }
 
         
-        // This function is bound to attack animation. I don't know if this is the best approach but visually makes the most sense.
         public void Attack() {
             Collider2D[] collisions = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius);
 
             foreach (var collision in collisions) {
                 if (collision.gameObject.CompareTag("Enemy")) {
                     // call enemy damage function.
-                    collision.gameObject.GetComponent<EnemyController>().TakeDamage(attackDamage);
+                    collision.gameObject.GetComponent<EnemyController>().TakeDamage(attackDamage, transform.position);
                 }
             }
         }
 
         public void TakeDamage(float damage) {
-            Debug.Log("damage taken by player.");
             hp -= damage;
             if (hp <= 0) {
                 Die();
@@ -98,9 +96,7 @@ namespace PlayerScripts {
             Invoke(nameof(HitRecover), 1f);
         }
 
-        // this function WAS bound to hit animation.
-        // If you have a transition from "Any State" to an animation and if this function is bound to animation, function call might be skipped which breaks the game.
-        public void HitRecover() {
+       public void HitRecover() {
             List<Collider2D> collisions = new();
             ContactFilter2D contactFilter2D = new ContactFilter2D();
             // TODO: actually use contact filter.
@@ -127,7 +123,6 @@ namespace PlayerScripts {
         // Which is better: Handle in player script or in enemy script?
         private void OnCollisionEnter2D(Collision2D other) {
             if (other.gameObject.CompareTag("Enemy")) {
-                Debug.Log("enemy collided.");
                 TakeDamage(1f);
             }
         }

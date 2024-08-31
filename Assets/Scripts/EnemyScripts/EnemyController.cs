@@ -7,7 +7,6 @@ namespace EnemyScripts {
     [RequireComponent(typeof(Animator))]
     public class EnemyController : MonoBehaviour {
         [SerializeField] private Enemy enemyInfo;
-        public Enemy EnemyInfo => enemyInfo;
 
         private float _currentHp = 1f;
         private Animator _animator;
@@ -18,13 +17,21 @@ namespace EnemyScripts {
             _currentHp = enemyInfo.Hp;
         }
 
-        public void TakeDamage(float damage) {
+        public void TakeDamage(float damage, Vector3 position) {
             _currentHp -= damage;
-            _animator.SetTrigger(HitTrig);
-            Debug.Log("damage taken by enemy.");
 
             if (_currentHp <= 0f) {
                 Die();
+            }
+            else {
+                _animator.SetTrigger(HitTrig);
+                // apply knockback depending on the position of the hit. Just check x direction
+                if (position.x > transform.position.x) {
+                    GetComponent<Rigidbody2D>().AddForce(-enemyInfo.KnockbackForce, ForceMode2D.Impulse);
+                }
+                else {
+                    GetComponent<Rigidbody2D>().AddForce(enemyInfo.KnockbackForce, ForceMode2D.Impulse);
+                }
             }
         }
 

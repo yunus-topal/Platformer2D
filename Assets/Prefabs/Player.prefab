@@ -351,7 +351,7 @@ MonoBehaviour:
   hp: 100
   speed: 10
   attackDamage: 10
-  attackCooldown: 0.5
+  attackCooldown: 0.25
   attackPoint: {fileID: 2386205423438506638}
   attackRadius: 0.5
 --- !u!95 &1690331735014655335
