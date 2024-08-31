@@ -9048,7 +9048,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.086004
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -9198,7 +9198,7 @@ MonoBehaviour:
   m_Follow: {fileID: 157590810}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 7.086004
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -9278,7 +9278,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1712930563}
   bossBlockage: {fileID: 1782593765}
-  bossAreaCollider: {fileID: 1356415777}
 --- !u!61 &1356415777
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9425,6 +9424,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 636374357979236266, guid: 8894c537ee922bc43a56cca774335742, type: 3}
+      propertyPath: enemyLayers.m_Bits
+      value: 320
+      objectReference: {fileID: 0}
     - target: {fileID: 1849397324078372259, guid: 8894c537ee922bc43a56cca774335742, type: 3}
       propertyPath: m_Name
       value: Player
@@ -9916,6 +9919,10 @@ PrefabInstance:
     - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
       propertyPath: m_Name
       value: GhostEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
       propertyPath: m_TagString

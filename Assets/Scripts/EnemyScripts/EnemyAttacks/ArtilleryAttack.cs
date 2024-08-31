@@ -21,8 +21,7 @@ namespace EnemyScripts.EnemyAttacks {
             if (_player == null) yield break;
             
             while (true) {
-                var target = _player.transform.position;
-                while ((target - transform.position).magnitude > 25f) {
+                while ((_player.transform.position - transform.position).magnitude > 25f) {
                     yield return new WaitForSeconds(0.5f);
                 }
                 

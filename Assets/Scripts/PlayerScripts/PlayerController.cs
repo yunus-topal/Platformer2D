@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnemyScripts;
 using UnityEngine;
 
@@ -16,10 +18,6 @@ namespace PlayerScripts {
         [SerializeField] private GameObject attackPoint;
         [SerializeField] private float attackRadius;
 
-        [Header("Layer Masks")] 
-        [SerializeField] private LayerMask enemyLayers;
-        
-
         #endregion
 
         #region private
@@ -27,7 +25,6 @@ namespace PlayerScripts {
         private float _lastAttack = float.MinValue;
         private CharacterController2D _cc;
         private Animator _animator;
-        private CapsuleCollider2D _collider2D;
 
         // animation hashes
         private static readonly int AttackTrig = Animator.StringToHash("attack_trig");
@@ -46,7 +43,6 @@ namespace PlayerScripts {
             
             _cc = GetComponent<CharacterController2D>();
             _animator = GetComponent<Animator>();
-            _collider2D = GetComponent<CapsuleCollider2D>();
         }
         
         // Update is called once per frame
@@ -97,18 +93,25 @@ namespace PlayerScripts {
             // todo: find a better way for this.
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
             // _collider2D.excludeLayers = enemyLayers;
+            
+            // TODO: check if there is a way to get animation length instead of a fixed value here.
+            Invoke(nameof(HitRecover), 1f);
         }
 
-        // this function is bound to hit animation. I don't know if this is the best approach but visually makes the most sense.
+        // this function WAS bound to hit animation.
+        // If you have a transition from "Any State" to an animation and if this function is bound to animation, function call might be skipped which breaks the game.
         public void HitRecover() {
-            LayerMask contactLayers = gameObject.GetComponent<Collider2D>().contactCaptureLayers;
-            if ((contactLayers | enemyLayers) > 0) {
-                // TODO: define collision damage.
+            List<Collider2D> collisions = new();
+            ContactFilter2D contactFilter2D = new ContactFilter2D();
+            // TODO: actually use contact filter.
+            gameObject.GetComponent<Collider2D>().OverlapCollider(contactFilter2D.NoFilter(),collisions);
+
+            if (collisions.Any(collision => collision.gameObject.CompareTag("Enemy"))) {
                 Debug.Log("enemy still in contact.");
                 TakeDamage(1f);
                 return;
             }
-
+            
             Debug.Log("player recovered");
             
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,false);
