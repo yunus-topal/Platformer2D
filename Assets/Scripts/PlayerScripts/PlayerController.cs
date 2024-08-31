@@ -65,6 +65,7 @@ namespace PlayerScripts {
             if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time - _lastAttack > attackCooldown) {
                 _animator.SetTrigger(AttackTrig);
                 _lastAttack = Time.time;
+                Invoke(nameof(Attack), 0.1f);
             }        
         }
 
@@ -94,7 +95,6 @@ namespace PlayerScripts {
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
             // _collider2D.excludeLayers = enemyLayers;
             
-            // TODO: check if there is a way to get animation length instead of a fixed value here.
             Invoke(nameof(HitRecover), 1f);
         }
 
