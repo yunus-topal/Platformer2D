@@ -3,8 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnemyScripts;
+using ManagerScripts;
 
 public class HeroKnight : MonoBehaviour {
+
+    public enum HeroState
+    {
+        Normal,
+        Invulnerable,
+        Conversation,
+        Dead
+    }
+    #region serialized fields
 
     [Header("General")] 
     [SerializeField] private float      m_hp = 100.0f;
@@ -22,6 +32,12 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] private GameObject m_attackPointLeft;
     [SerializeField] private float m_attackRadius;
 
+
+    #endregion
+
+    #region private fields
+    
+    private HeroState           m_state = HeroState.Normal;
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
     private Sensor_HeroKnight   m_groundSensor;
@@ -38,12 +54,16 @@ public class HeroKnight : MonoBehaviour {
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
+    private LevelManager        m_levelManager;
 
     // layer mask ids
     private static int _playerLayer;
     private static int _enemyLayer;
     
-    // animation hashes
+    #endregion
+
+    #region animation hash
+    
     private static readonly int Hurt = Animator.StringToHash("Hurt");
     private static readonly int WallSlide = Animator.StringToHash("WallSlide");
     private static readonly int AirSpeedY = Animator.StringToHash("AirSpeedY");
@@ -52,15 +72,17 @@ public class HeroKnight : MonoBehaviour {
     private static readonly int IdleBlock = Animator.StringToHash("IdleBlock");
     private static readonly int Block = Animator.StringToHash("Block");
     private static readonly int AnimState = Animator.StringToHash("AnimState");
+    private static readonly int Death = Animator.StringToHash("Death");
 
-
+    #endregion
+    
     void Awake() {
         _playerLayer = LayerMask.NameToLayer("Player");
         _enemyLayer = LayerMask.NameToLayer("Enemy");
     }
-    // Use this for initialization
     void Start ()
     {
+        m_levelManager = FindObjectOfType<LevelManager>();
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
@@ -70,9 +92,14 @@ public class HeroKnight : MonoBehaviour {
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
     }
 
-    // Update is called once per frame
     void Update ()
     {
+        if(m_state == HeroState.Dead || m_state == HeroState.Conversation) return;
+        if(transform.position.y < -15f) {
+            Die();
+            return;
+        }
+        
         #region stateLogic
 
         // Increase timer that controls attack combo
@@ -128,9 +155,7 @@ public class HeroKnight : MonoBehaviour {
         m_animator.SetFloat(AirSpeedY, m_body2d.velocity.y);
 
         #endregion
-
-
-
+        
         // -- Handle Animations --
         //Wall Slide
         m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
@@ -143,10 +168,6 @@ public class HeroKnight : MonoBehaviour {
             m_animator.SetBool("noBlood", m_noBlood);
             m_animator.SetTrigger("Death");
         }
-            
-        //Hurt
-        else if (Input.GetKeyDown("q") && !m_rolling)
-            m_animator.SetTrigger("Hurt");
         
         */
         
@@ -172,7 +193,7 @@ public class HeroKnight : MonoBehaviour {
         }
         
         //Jump
-        else if (Input.GetKeyDown("w") && m_grounded && !m_rolling)
+        else if (Input.GetKeyDown(KeyCode.W) && m_grounded && !m_rolling)
         {
             m_animator.SetTrigger(Jump);
             m_grounded = false;
@@ -232,31 +253,28 @@ public class HeroKnight : MonoBehaviour {
     }
     
     public void TakeDamage(float damage, Vector3 position) {
+        if(m_state is HeroState.Invulnerable or HeroState.Dead or HeroState.Conversation) return;
+        
         m_hp -= damage;
         if (m_hp <= 0) {
-            Destroy(gameObject);
+            Die();
             return;
-        }       
+        }
+
+        m_state = HeroState.Invulnerable;
         m_animator.SetTrigger(Hurt);
         
-        // todo: fix this. It's not working because of input reading at the beggining of the update loop.
-        //var target = transform.position;
-        // apply knockback depending on the position of the hit. Just check x direction
+        // apply knockback depending on the position of the hit.
+        var target = transform.position;
         if (position.x > transform.position.x) {
-            Debug.Log("AAAAAAAAAAA");
-            //target.x -= m_knockback;
-            m_body2d.velocity = new Vector2(m_knockback, m_body2d.velocity.y);
-            //transform.position = Vector3.MoveTowards(transform.position, target, m_knockback);
+            target.x -= m_knockback;
         }
         else {
-            Debug.Log("BBBBBBBBBB");
-
-            //target.x += m_knockback;
-            //transform.position = Vector3.MoveTowards(transform.position, target, m_knockback);
-            m_body2d.velocity = new Vector2(m_knockback, m_body2d.velocity.y);
+            target.x += m_knockback;
         }
+        transform.position = Vector3.MoveTowards(transform.position, target, m_knockback);
+
         
-            
         // todo: find a better way for this.
         Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
         // _collider2D.excludeLayers = enemyLayers;
@@ -265,20 +283,32 @@ public class HeroKnight : MonoBehaviour {
     }
     
     public void HitRecover() {
+        m_state = HeroState.Normal;
+        
         List<Collider2D> collisions = new();
         ContactFilter2D contactFilter2D = new ContactFilter2D();
         // TODO: actually use contact filter.
         gameObject.GetComponent<Collider2D>().OverlapCollider(contactFilter2D.NoFilter(),collisions);
 
         if (collisions.Any(collision => collision.gameObject.CompareTag("Enemy"))) {
-            Debug.Log("enemy still in contact.");
             TakeDamage(1f, collisions.First().transform.position);
             return;
         }
-            
-        Debug.Log("player recovered");
-            
         Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,false);
+    }
+
+    public void Die() {
+        // TODO: set game menu to game over.
+        m_levelManager.GameOver();
+        
+        m_animator.SetTrigger(Death);
+        m_state = HeroState.Dead;
+        Invoke(nameof(DestroyHero),1f);
+    }
+
+    private void DestroyHero() {
+        Time.timeScale = 0f;
+        Destroy(gameObject);
     }
     
     // Which is better: Handle in player script or in enemy script?

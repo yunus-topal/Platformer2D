@@ -3,15 +3,45 @@ using UnityEngine;
 
 namespace ManagerScripts {
     public class LevelManager : MonoBehaviour {
-        [SerializeField] private GameObject player;
+        public enum GameState {
+            Paused,
+            Playing,
+            GameOver
+        }
+        
         [SerializeField] private GameObject bossBlockage;
-
+        [SerializeField] private GameObject bossPrefab;
+        [SerializeField] private Transform bossSpawnPoint;
+        
+        [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private GameObject pausePanel;
+        
+        private GameState _gameState = GameState.Playing;
         private BoxCollider2D _bossAreaCollider;
 
         private void Start() {
             _bossAreaCollider = GetComponent<BoxCollider2D>();
         }
 
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                OnEscPressed();
+            }
+        }
+        
+        public void OnEscPressed() {
+            if (_gameState == GameState.Paused) {
+                Time.timeScale = 1;
+                pausePanel.SetActive(false);
+                _gameState = GameState.Playing;
+            }
+            else if(_gameState == GameState.Playing) {
+                Time.timeScale = 0;
+                pausePanel.SetActive(true);
+                _gameState = GameState.Paused;
+            }
+        }
+        
         // boss area trigger
         private void OnTriggerEnter2D(Collider2D other) {
             if (!other.gameObject.CompareTag("Player")) return;
@@ -29,7 +59,15 @@ namespace ManagerScripts {
         }
 
         private void SpawnBoss() {
-            
+            Instantiate(bossPrefab, bossSpawnPoint.position, Quaternion.identity);
+        }
+
+        public void GameOver() {
+            gameOverPanel.SetActive(true);
+        }
+
+        public void QuitGame() {
+            Application.Quit();
         }
     }
 }
