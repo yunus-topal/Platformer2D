@@ -210,7 +210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   artilleryShell: {fileID: 7823280159199352533, guid: 2343ab3753b96e849b7416c763ad38b6, type: 3}
   attackPoint: {fileID: 2899108854187046500}
-  shellForce: 100
+  shellForce: 10
   attackCooldown: 1
 --- !u!1 &8813646549750777552
 GameObject:

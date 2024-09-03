@@ -171,34 +171,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6404855816162853479, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: m_BodyType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404855816162853479, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: m_Constraints
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 8333641599486190454, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
       propertyPath: m_Name
       value: PatrollingEnemy
       objectReference: {fileID: 0}
-    - target: {fileID: 9168694140103145183, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: speed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9168694140103145183, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: patrolPoints.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9168694140103145183, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: patrolPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 1672162602}
-    - target: {fileID: 9168694140103145183, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-      propertyPath: patrolPoints.Array.data[1]
-      value: 
-      objectReference: {fileID: 1795901892}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9612,14 +9588,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9043920546160527475, guid: a4b4a6d32bcb19248a754d6602ffc7e4, type: 3}
-      propertyPath: m_hp
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043920546160527475, guid: a4b4a6d32bcb19248a754d6602ffc7e4, type: 3}
-      propertyPath: m_knockback
-      value: 0.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10352,11 +10320,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8471899512618560894, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
   m_PrefabInstance: {fileID: 2144630332547542538}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1672162602 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9122596734046302979, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-  m_PrefabInstance: {fileID: 121277142}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1782593765
 GameObject:
   m_ObjectHideFlags: 0
@@ -10774,11 +10737,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!4 &1795901892 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7957432426486035332, guid: 567b0fa6a637ada4fa2558a893b6e98c, type: 3}
-  m_PrefabInstance: {fileID: 121277142}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1827046153 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5055854140634502971, guid: aae0c7f1afebab8439d58f78639ddbb5, type: 3}
@@ -10860,21 +10818,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 890108533}
     m_Modifications:
-    - target: {fileID: 653727888777572096, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
-      propertyPath: speed
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
       propertyPath: m_Name
       value: GhostEnemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1459875925756336174, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
-      propertyPath: m_TagString
-      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8471899512618560894, guid: a4829f12f52818a46bbb818fb599088f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10929,10 +10875,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 890108533}
     m_Modifications:
-    - target: {fileID: 2772816607633520564, guid: aae0c7f1afebab8439d58f78639ddbb5, type: 3}
-      propertyPath: shellForce
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 5055854140634502971, guid: aae0c7f1afebab8439d58f78639ddbb5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.8239403

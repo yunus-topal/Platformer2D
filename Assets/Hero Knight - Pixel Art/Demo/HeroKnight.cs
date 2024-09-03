@@ -24,6 +24,7 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] private float      m_knockback = 3f;
     [SerializeField] private bool       m_noBlood = false;
     [SerializeField] private GameObject m_slideDust;
+    [SerializeField] private LayerMask enemyLayers;
     
     [Header("Attack Section")] 
     [SerializeField] private float m_attackDamage = 10f;
@@ -33,6 +34,7 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] private float m_attackRadius;
 
 
+    
     #endregion
 
     #region private fields
@@ -55,6 +57,8 @@ public class HeroKnight : MonoBehaviour {
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
     private LevelManager        m_levelManager;
+    
+    private HashSet<Collider2D> hitEnemies;
 
     // layer mask ids
     private static int _playerLayer;
@@ -82,6 +86,7 @@ public class HeroKnight : MonoBehaviour {
     }
     void Start ()
     {
+        hitEnemies = new HashSet<Collider2D>();
         m_levelManager = FindObjectOfType<LevelManager>();
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
@@ -186,8 +191,7 @@ public class HeroKnight : MonoBehaviour {
 
             // Call one of three attack animations "Attack1", "Attack2", "Attack3"
             m_animator.SetTrigger("Attack" + m_currentAttack);
-            Invoke(nameof(Attack), 0.1f);
-            
+            StartCoroutine(Attack());            
             // Reset timer
             m_timeSinceAttack = 0.0f;
         }
@@ -238,7 +242,38 @@ public class HeroKnight : MonoBehaviour {
                     m_animator.SetInteger(AnimState, 0);
         }
     }
+    
+    
+    
+    IEnumerator Attack()
+    {
+        hitEnemies.Clear(); // Clear the list of enemies hit by the attack
+        float elapsedTime = 0f;
 
+        while (elapsedTime < 0.42f)
+        {
+            // Detect enemies in range of the attack
+            Collider2D[] detectedEnemies;
+            if(m_facingDirection == 1) detectedEnemies = Physics2D.OverlapCircleAll(m_attackPointRight.transform.position, m_attackRadius, enemyLayers);
+            else detectedEnemies = Physics2D.OverlapCircleAll(m_attackPointLeft.transform.position, m_attackRadius, enemyLayers);
+
+            // Apply damage to each enemy
+            foreach (Collider2D enemy in detectedEnemies)
+            {
+                if (hitEnemies.Contains(enemy)) continue; // Skip enemies that have already been hit by this attack
+                enemy.GetComponent<EnemyController>().TakeDamage(m_attackDamage, transform.position);
+                hitEnemies.Add(enemy);
+            }
+
+            // Wait for the next check
+            yield return new WaitForSeconds(0.05f);
+
+            // Update elapsed time
+            elapsedTime += 0.05f;
+        }
+    }
+    
+    /*
     public void Attack() {
         Collider2D[] collisions;
         if(m_facingDirection == 1) collisions = Physics2D.OverlapCircleAll(m_attackPointRight.transform.position, m_attackRadius);
@@ -251,6 +286,7 @@ public class HeroKnight : MonoBehaviour {
             }
         }
     }
+    */
     
     public void TakeDamage(float damage, Vector3 position) {
         if(m_state is HeroState.Invulnerable or HeroState.Dead or HeroState.Conversation) return;
@@ -276,6 +312,7 @@ public class HeroKnight : MonoBehaviour {
 
         
         // todo: find a better way for this.
+        Debug.Log(enemyLayers.value);
         Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
         // _collider2D.excludeLayers = enemyLayers;
             
