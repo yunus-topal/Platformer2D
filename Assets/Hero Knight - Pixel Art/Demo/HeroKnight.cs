@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnemyScripts;
+using EnemyScripts.BossScripts;
+using Interfaces;
 using ManagerScripts;
 
-public class HeroKnight : MonoBehaviour {
+public class HeroKnight : MonoBehaviour, IDamageable {
 
     public enum HeroState
     {
@@ -60,6 +62,7 @@ public class HeroKnight : MonoBehaviour {
     private LevelManager        m_levelManager;
     
     private HashSet<Collider2D> hitEnemies;
+    private float attackInterval = 0.1f;
 
     // layer mask ids
     private static int _playerLayer;
@@ -265,18 +268,21 @@ public class HeroKnight : MonoBehaviour {
             foreach (Collider2D enemy in detectedEnemies)
             {
                 if (hitEnemies.Contains(enemy)) continue; // Skip enemies that have already been hit by this attack
-                enemy.GetComponent<EnemyController>().TakeDamage(m_attackDamage, transform.position);
+                
+                var damageable = enemy.GetComponent<IDamageable>();
+                damageable.TakeDamage(m_attackDamage, transform.position);
                 hitEnemies.Add(enemy);
             }
 
             // Wait for the next check
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(attackInterval);
 
             // Update elapsed time
-            elapsedTime += 0.05f;
+            elapsedTime += attackInterval;
         }
     }
     
+    // alternate attack function for single hit checking. Current attack animations are too long so this is not used.
     /*
     public void Attack() {
         Collider2D[] collisions;

@@ -171,4 +171,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   oscillationFrequency: 2
-  oscillationMagnitude: 2
+  oscillationMagnitude: 5

@@ -20,6 +20,7 @@ namespace EnemyScripts.EnemyBehaviors {
 
             while (true) {
                 var target = _player.transform.position;
+                target.y += 1.0f;
 
                 if ((target - transform.position).magnitude < 25f) {
                     // Calculate the offset using sine wave

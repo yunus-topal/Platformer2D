@@ -1,11 +1,12 @@
 using System;
 using EnemyScripts.EnemyAttacks;
 using EnemyScripts.EnemyBehaviors;
+using Interfaces;
 using UnityEngine;
 
 namespace EnemyScripts {
     [RequireComponent(typeof(Animator))]
-    public class EnemyController : MonoBehaviour {
+    public class EnemyController : MonoBehaviour, IDamageable {
         [SerializeField] private Enemy enemyInfo;
 
         private float _currentHp = 1f;
