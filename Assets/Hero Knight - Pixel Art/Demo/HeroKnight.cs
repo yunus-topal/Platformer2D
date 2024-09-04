@@ -27,6 +27,7 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] private LayerMask enemyLayers;
     
     [Header("Attack Section")] 
+    [SerializeField] private bool disableInputInAttack = false;
     [SerializeField] private float m_attackDamage = 10f;
     [SerializeField] private float m_attackCooldown = 0.25f;
     [SerializeField] private GameObject m_attackPointRight;
@@ -52,7 +53,7 @@ public class HeroKnight : MonoBehaviour {
     private bool                m_rolling = false;
     private int                 m_facingDirection = 1;
     private int                 m_currentAttack = 0;
-    private float               m_timeSinceAttack = 0.0f;
+    private float               m_timeSinceAttack = 0f;
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
@@ -134,6 +135,9 @@ public class HeroKnight : MonoBehaviour {
 
         #endregion
 
+        // disable input in attack animation.
+        if(disableInputInAttack && m_timeSinceAttack < m_attackCooldown) return;
+        
         #region movement
 
         // -- Handle input and movement --

@@ -186,6 +186,7 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
+  disableInputInAttack: 0
   m_attackDamage: 10
   m_attackCooldown: 0.25
   m_attackPointRight: {fileID: 3901744336586382084}
