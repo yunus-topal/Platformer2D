@@ -10,8 +10,7 @@ namespace ManagerScripts {
         }
         
         [SerializeField] private GameObject bossBlockage;
-        [SerializeField] private GameObject bossPrefab;
-        [SerializeField] private Transform bossSpawnPoint;
+        [SerializeField] private GameObject boss;
         
         [SerializeField] private GameObject gameOverPanel;
         [SerializeField] private GameObject pausePanel;
@@ -59,7 +58,7 @@ namespace ManagerScripts {
         }
 
         private void SpawnBoss() {
-            Instantiate(bossPrefab, bossSpawnPoint.position, Quaternion.identity);
+            boss.gameObject.SetActive(true);
         }
 
         public void GameOver() {
