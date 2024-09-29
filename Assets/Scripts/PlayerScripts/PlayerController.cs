@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnemyScripts;
 using UnityEngine;
 
@@ -16,10 +18,6 @@ namespace PlayerScripts {
         [SerializeField] private GameObject attackPoint;
         [SerializeField] private float attackRadius;
 
-        [Header("Layer Masks")] 
-        [SerializeField] private LayerMask enemyLayers;
-        
-
         #endregion
 
         #region private
@@ -27,7 +25,6 @@ namespace PlayerScripts {
         private float _lastAttack = float.MinValue;
         private CharacterController2D _cc;
         private Animator _animator;
-        private CapsuleCollider2D _collider2D;
 
         // animation hashes
         private static readonly int AttackTrig = Animator.StringToHash("attack_trig");
@@ -46,7 +43,6 @@ namespace PlayerScripts {
             
             _cc = GetComponent<CharacterController2D>();
             _animator = GetComponent<Animator>();
-            _collider2D = GetComponent<CapsuleCollider2D>();
         }
         
         // Update is called once per frame
@@ -69,24 +65,23 @@ namespace PlayerScripts {
             if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time - _lastAttack > attackCooldown) {
                 _animator.SetTrigger(AttackTrig);
                 _lastAttack = Time.time;
+                Invoke(nameof(Attack), 0.1f);
             }        
         }
 
         
-        // This function is bound to attack animation. I don't know if this is the best approach but visually makes the most sense.
         public void Attack() {
             Collider2D[] collisions = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius);
 
             foreach (var collision in collisions) {
                 if (collision.gameObject.CompareTag("Enemy")) {
                     // call enemy damage function.
-                    collision.gameObject.GetComponent<EnemyController>().TakeDamage(attackDamage);
+                    collision.gameObject.GetComponent<EnemyController>().TakeDamage(attackDamage, transform.position);
                 }
             }
         }
 
         public void TakeDamage(float damage) {
-            Debug.Log("damage taken by player.");
             hp -= damage;
             if (hp <= 0) {
                 Die();
@@ -97,18 +92,22 @@ namespace PlayerScripts {
             // todo: find a better way for this.
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,true);
             // _collider2D.excludeLayers = enemyLayers;
+            
+            Invoke(nameof(HitRecover), 1f);
         }
 
-        // this function is bound to hit animation. I don't know if this is the best approach but visually makes the most sense.
-        public void HitRecover() {
-            LayerMask contactLayers = gameObject.GetComponent<Collider2D>().contactCaptureLayers;
-            if ((contactLayers | enemyLayers) > 0) {
-                // TODO: define collision damage.
+       public void HitRecover() {
+            List<Collider2D> collisions = new();
+            ContactFilter2D contactFilter2D = new ContactFilter2D();
+            // TODO: actually use contact filter.
+            gameObject.GetComponent<Collider2D>().OverlapCollider(contactFilter2D.NoFilter(),collisions);
+
+            if (collisions.Any(collision => collision.gameObject.CompareTag("Enemy"))) {
                 Debug.Log("enemy still in contact.");
                 TakeDamage(1f);
                 return;
             }
-
+            
             Debug.Log("player recovered");
             
             Physics2D.IgnoreLayerCollision(_playerLayer,_enemyLayer,false);
@@ -124,7 +123,6 @@ namespace PlayerScripts {
         // Which is better: Handle in player script or in enemy script?
         private void OnCollisionEnter2D(Collision2D other) {
             if (other.gameObject.CompareTag("Enemy")) {
-                Debug.Log("enemy collided.");
                 TakeDamage(1f);
             }
         }

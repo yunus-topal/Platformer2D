@@ -8,11 +8,14 @@ namespace EnemyScripts {
         [SerializeField] private new string name;
         [SerializeField] private float hp;
         [SerializeField] private float collisionDamage;
+        [SerializeField] private float knockback;
 
         public string Name => name;
 
         public float Hp => hp;
 
         public float CollisionDamage => collisionDamage;
+        
+        public float Knockback => knockback;
     }
 }

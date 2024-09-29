@@ -36,6 +36,9 @@ namespace PlayerScripts {
 
 		public BoolEvent OnCrouchEvent;
 		private bool m_wasCrouching = false;
+		
+		private static readonly int MoveSpeed = Animator.StringToHash("move_speed");
+		private static readonly int Grounded = Animator.StringToHash("grounded");
 
 		private void Awake()
 		{
@@ -142,9 +145,8 @@ namespace PlayerScripts {
 				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 			}
 		
-			_animator.SetFloat("move_speed", Math.Abs(m_Rigidbody2D.velocity.x));
-			_animator.SetFloat("jump_speed", m_Rigidbody2D.velocity.y);
-			_animator.SetBool("grounded", m_Grounded);
+			_animator.SetFloat(MoveSpeed, Math.Abs(m_Rigidbody2D.velocity.x));
+			_animator.SetBool(Grounded, m_Grounded);
 		}
 
 

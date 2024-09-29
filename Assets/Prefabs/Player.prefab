@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &104492499709659747
 Transform:
   m_ObjectHideFlags: 0
@@ -351,12 +351,9 @@ MonoBehaviour:
   hp: 100
   speed: 10
   attackDamage: 10
-  attackCooldown: 0.5
+  attackCooldown: 0.25
   attackPoint: {fileID: 2386205423438506638}
   attackRadius: 0.5
-  enemyLayers:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!95 &1690331735014655335
 Animator:
   serializedVersion: 5
@@ -426,7 +423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7749378073272595871
 Transform:
   m_ObjectHideFlags: 0

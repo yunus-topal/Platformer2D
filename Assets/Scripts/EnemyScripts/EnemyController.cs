@@ -1,13 +1,13 @@
 using System;
 using EnemyScripts.EnemyAttacks;
 using EnemyScripts.EnemyBehaviors;
+using Interfaces;
 using UnityEngine;
 
 namespace EnemyScripts {
     [RequireComponent(typeof(Animator))]
-    public class EnemyController : MonoBehaviour {
+    public class EnemyController : MonoBehaviour, IDamageable {
         [SerializeField] private Enemy enemyInfo;
-        public Enemy EnemyInfo => enemyInfo;
 
         private float _currentHp = 1f;
         private Animator _animator;
@@ -18,13 +18,25 @@ namespace EnemyScripts {
             _currentHp = enemyInfo.Hp;
         }
 
-        public void TakeDamage(float damage) {
+        public void TakeDamage(float damage, Vector3 position) {
             _currentHp -= damage;
-            _animator.SetTrigger(HitTrig);
-            Debug.Log("damage taken by enemy.");
 
             if (_currentHp <= 0f) {
                 Die();
+            }
+            else {
+                _animator.SetTrigger(HitTrig);
+                var target = transform.position;
+                // apply knockback depending on the position of the hit. Just check x direction
+                if (position.x > transform.position.x) {
+                    target.x -= enemyInfo.Knockback;
+
+                    transform.position = Vector3.MoveTowards(transform.position, target, enemyInfo.Knockback);
+                }
+                else {
+                    target.x += enemyInfo.Knockback;
+                    transform.position = Vector3.MoveTowards(transform.position, target, enemyInfo.Knockback);
+                }
             }
         }
 
