@@ -6,6 +6,7 @@ using EnemyScripts;
 using EnemyScripts.BossScripts;
 using Interfaces;
 using ManagerScripts;
+using PlayerScripts;
 
 public class HeroKnight : MonoBehaviour, IDamageable {
 
@@ -41,7 +42,10 @@ public class HeroKnight : MonoBehaviour, IDamageable {
     #endregion
 
     #region private fields
-    
+
+    private PlayerController _playerController;
+    private LevelManager        m_levelManager;
+
     private HeroState           m_state = HeroState.Normal;
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -59,7 +63,7 @@ public class HeroKnight : MonoBehaviour, IDamageable {
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
-    private LevelManager        m_levelManager;
+    private float currentHp;
     
     private HashSet<Collider2D> hitEnemies;
     private float attackInterval = 0.1f;
@@ -87,6 +91,8 @@ public class HeroKnight : MonoBehaviour, IDamageable {
     void Awake() {
         _playerLayer = LayerMask.NameToLayer("Player");
         _enemyLayer = LayerMask.NameToLayer("Enemy");
+        _playerController = GetComponent<PlayerController>();
+        currentHp = m_hp;
     }
     void Start ()
     {
@@ -301,8 +307,11 @@ public class HeroKnight : MonoBehaviour, IDamageable {
     public void TakeDamage(float damage, Vector3 position) {
         if(m_state is HeroState.Invulnerable or HeroState.Dead or HeroState.Conversation) return;
         
-        m_hp -= damage;
-        if (m_hp <= 0) {
+        currentHp -= damage;
+        // set health bar value.
+        _playerController.SetHealthbarColor(Mathf.Clamp(currentHp / m_hp,0,1));
+        
+        if (currentHp <= 0) {
             Die();
             return;
         }
