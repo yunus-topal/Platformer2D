@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace ManagerScripts {
@@ -15,11 +16,15 @@ namespace ManagerScripts {
         [SerializeField] private GameObject gameOverPanel;
         [SerializeField] private GameObject pausePanel;
         
+        [SerializeField] private TextMeshProUGUI currentGoldText;
+        private int _currentGold = 0;
+        
         private GameState _gameState = GameState.Playing;
         private BoxCollider2D _bossAreaCollider;
 
         private void Start() {
             _bossAreaCollider = GetComponent<BoxCollider2D>();
+            // TODO: fetch current gold from player save or prefs.
         }
 
         private void Update() {
@@ -39,6 +44,11 @@ namespace ManagerScripts {
                 pausePanel.SetActive(true);
                 _gameState = GameState.Paused;
             }
+        }
+        
+        public void AddGold(int gold) {
+            _currentGold += gold;
+            currentGoldText.text = _currentGold.ToString();
         }
         
         // boss area trigger

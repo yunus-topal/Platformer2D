@@ -15,4 +15,5 @@ MonoBehaviour:
   name: 
   hp: 30
   collisionDamage: 5
-  knockbackForce: {x: 0, y: 0}
+  knockback: 0
+  goldDrop: 50

@@ -9,6 +9,7 @@ namespace EnemyScripts {
         [SerializeField] private float hp;
         [SerializeField] private float collisionDamage;
         [SerializeField] private float knockback;
+        [SerializeField] private int goldDrop;
 
         public string Name => name;
 
@@ -17,5 +18,7 @@ namespace EnemyScripts {
         public float CollisionDamage => collisionDamage;
         
         public float Knockback => knockback;
+        
+        public int GoldDrop => goldDrop;
     }
 }

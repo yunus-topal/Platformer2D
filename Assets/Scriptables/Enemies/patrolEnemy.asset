@@ -16,3 +16,4 @@ MonoBehaviour:
   hp: 50
   collisionDamage: 5
   knockback: 0.5
+  goldDrop: 40
