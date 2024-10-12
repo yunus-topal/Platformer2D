@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using EnvironmentScripts;
 
 public class Sensor_HeroKnight : MonoBehaviour {
 
@@ -21,11 +22,19 @@ public class Sensor_HeroKnight : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if(other.gameObject.CompareTag("Platform"))
+        {
+            other.gameObject.GetComponent<MovingPlatform>().SetPlayerOnPlatform(true);
+        }
         m_ColCount++;
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
+        if(other.gameObject.CompareTag("Platform"))
+        {
+            other.gameObject.GetComponent<MovingPlatform>().SetPlayerOnPlatform(false);
+        }
         m_ColCount--;
     }
 
